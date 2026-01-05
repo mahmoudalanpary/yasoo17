@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YASO // 17</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        body { 
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100dvh;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
+            z-index: -1;
+        }
+
+        .card-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(0.98) rotate(-1deg); }
+            75% { transform: scale(1.02) rotate(1deg); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+function App() {
+    const [age, setAge] = useState(0);
+    const [isCelebrating, setIsCelebrating] = useState(false);
+
+    useEffect(() => {
+        if(age < 17) {
+            const timer = setTimeout(() => setAge(a => a + 1), 100);
+            return () => clearTimeout(timer);
+        }
+    }, [age]);
+
+    const handleCelebrate = () => {
+        setIsCelebrating(true);
+        
+        // 1. تشغيل القصاصات الملونة (بألوان فخمة)
+        const duration = 3 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ffffff', '#6366f1', '#ef4444']
+            });
+            confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ffffff', '#6366f1', '#ef4444']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+
+        // 2. إعادة الزرار لوضعه الطبيعي بعد فترة
+        setTimeout(() => setIsCelebrating(false), 1000);
+    };
+
+    return (
+        <div className="min-h-screen w-full flex items-center justify-center p-5 relative overflow-hidden">
+            <div className="ambient-glow"></div>
+            
+            <div className={`card-container w-full max-w-md md:max-w-4xl p-8 md:p-16 ${isCelebrating ? 'shake' : ''} fade-in-up`}>
+                
+                <div className="flex flex-col md:flex-row items-center gap-10">
+                    
+                    {/* Character Portrait */}
+                    <div className="relative w-full md:w-1/2 flex justify-center">
+                        <div className="relative w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                            <img 
+                                src="https://historical-plum-8mwed9v7if.edgeone.app/image-removebg-preview.png" 
+                                alt="Yaso Portrait"
+                                className="w-full h-full object-cover grayscale-[20%]"
+                            />
+                            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono tracking-widest border border-white/10">
+                                LVL. {age}
+                            </div>
+                        </div>
+                        <div className="absolute -z-10 -bottom-6 -right-4 text-8xl font-bold opacity-[0.05] select-none">
+                            17
+                        </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="w-full md:w-1/2 text-center md:text-left space-y-6">
+                        <div className="space-y-1">
+                            <p className="text-[10px] tracking-[0.5em] text-white/40 uppercase font-medium">System Resonance</p>
+                            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+                                YASO<span className="text-indigo-500">.</span>
+                            </h1>
+                        </div>
+
+                        <div className="space-y-4">
+                            <p className="text-gray-400 text-sm md:text-base leading-relaxed font-light">
+                                <span className="text-white font-medium">Chapter 17.</span> Walking the same path as <span className="text-red-500/80 font-bold">Kurenai Yuhi</span>.
+                                <br className="hidden md:block"/> Same destiny, born on June 11.
+                            </p>
+                            
+                            <div className="flex items-center gap-3 justify-center md:justify-start">
+                                <div className="h-[1px] w-10 bg-white/20"></div>
+                                <span className="text-[9px] tracking-widest text-white/40 uppercase">Genjutsu Legacy</span>
+                            </div>
+                        </div>
+
+                        <div className="pt-4">
+                            <button 
+                                onClick={handleCelebrate}
+                                className="group relative w-full md:w-auto px-10 py-4 bg-white text-black font-bold text-[10px] tracking-[0.3em] uppercase hover:invert transition-all duration-300 active:scale-90"
+                            >
+                                {isCelebrating ? "CELEBRATING..." : "UNLEASH POWER"}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* Overlay Message when celebrating */}
+            {isCelebrating && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none animate-pulse">
+                    <h2 className="text-4xl md:text-6xl font-black text-white text-center px-4 bg-black/40 backdrop-blur-sm py-4 w-full">
+                        HAPPY 17TH BIRTHDAY YASO!
+                    </h2>
+                </div>
+            )}
+
+            <footer className="absolute bottom-8 right-8 text-[8px] font-mono text-white/20 tracking-widest uppercase">
+                Yaso 17th Anniversary // June 11
+            </footer>
+        </div>
+    );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+
+</body>
+</html>
